@@ -1,10 +1,10 @@
-# 附录A：Go语言常见坑
+# Appendix A: Common Pitfalls in the Go Language
 
-这里列举的Go语言常见坑都是符合Go语言语法的，可以正常的编译，但是可能是运行结果错误，或者是有资源泄漏的风险。
+The common Go language traps listed here all conform to the Go language syntax and can be compiled properly, but may run with incorrect results or risk resource leaks.
 
-## 可变参数是空接口类型
+## Variable parameters are empty interface types
 
-当参数的可变参数是空接口类型时，传入空接口的切片时需要注意参数展开的问题。
+When the variable parameter of the argument is the empty interface type, attention needs to be paid to parameter expansion when passing in the slices of the empty interface.
 
 ```go
 func main() {
@@ -15,16 +15,16 @@ func main() {
 }
 ```
 
-不管是否展开，编译器都无法发现错误，但是输出是不同的：
+The compiler cannot find the error, whether it is expanded or not, but the output is different: the
 
 ```
 [1 2 3]
 1 2 3
 ```
 
-## 数组是值传递
+## Arrays are passed by value
 
-在函数调用参数中，数组是值传递，无法通过修改数组类型的参数返回结果。
+In function call parameters, arrays are value-passed and it is not possible to return the result by modifying the parameters of the array type.
 
 ```go
 func main() {
@@ -39,11 +39,11 @@ func main() {
 }
 ```
 
-必要时需要使用切片。
+The use of slices is required when necessary.
 
-## map遍历是顺序不固定
+## map traversal is not sequential
 
-map是一种hash表实现，每次遍历的顺序都可能不一样。
+map is a hash table implementation, and the order of each traversal may be different.
 
 ```go
 func main() {
@@ -59,9 +59,9 @@ func main() {
 }
 ```
 
-## 返回值被屏蔽
+## The return value is shadowed
 
-在局部作用域中，命名的返回值内同名的局部变量屏蔽：
+Masking of local variables with the same name within a named return value in a local scope.
 
 ```go
 func Foo() (err error) {
@@ -72,9 +72,9 @@ func Foo() (err error) {
 }
 ```
 
-## recover必须在defer函数中运行
+## recover must be run in the defer function
 
-recover捕获的是祖父级调用时的异常，直接调用时无效：
+The recover catches exceptions on grandfathered calls and is not valid on direct calls.
 
 ```go
 func main() {
@@ -83,7 +83,7 @@ func main() {
 }
 ```
 
-直接defer调用也是无效：
+Direct defer calls are also invalid: 
 
 ```go
 func main() {
@@ -92,7 +92,7 @@ func main() {
 }
 ```
 
-defer调用时多层嵌套依然无效：
+Multiple layers of nesting are still invalid when defer is called.
 
 ```go
 func main() {
@@ -103,7 +103,7 @@ func main() {
 }
 ```
 
-必须在defer函数中直接调用才有效：
+Must be called directly in the defer function to be valid.
 
 ```go
 func main() {
@@ -114,9 +114,9 @@ func main() {
 }
 ```
 
-## main函数提前退出
+## The main function retires early
 
-后台Goroutine无法保证完成任务。
+Background Goroutine cannot guarantee the completion of tasks.
 
 ```go
 func main() {
@@ -124,9 +124,9 @@ func main() {
 }
 ```
 
-## 通过Sleep来回避并发中的问题
+## use Sleep avoid concurrency problem
 
-休眠并不能保证输出完整的字符串：
+Sleep does not guarantee the output of a complete string: the
 
 ```go
 func main() {
@@ -135,7 +135,7 @@ func main() {
 }
 ```
 
-类似的还有通过插入调度语句：
+Similarly, by inserting the scheduling statement.
 
 ```go
 func main() {
@@ -144,9 +144,9 @@ func main() {
 }
 ```
 
-## 独占CPU导致其它Goroutine饿死
+## CPU exclusive use leads to starvation of other Goroutines(solved after 1.14)
 
-Goroutine是协作式抢占调度，Goroutine本身不会主动放弃CPU：
+Goroutine is cooperative preemption scheduling, and Goroutine itself does not actively give the CPU.
 
 ```go
 func main() {
@@ -158,11 +158,11 @@ func main() {
 		}
 	}()
 
-	for {} // 占用CPU
+	for {} // running on a core
 }
 ```
 
-解决的方法是在for循环加入runtime.Gosched()调度函数：
+The solution is to add the runtime.Gosched() scheduler function to the for loop.
 
 ```go
 func main() {
@@ -180,7 +180,7 @@ func main() {
 }
 ```
 
-或者是通过阻塞的方式避免CPU占用：
+Or, to avoid CPU usage by blocking.
 
 ```go
 func main() {
@@ -197,9 +197,9 @@ func main() {
 }
 ```
 
-## 不同Goroutine之间不满足顺序一致性内存模型
+## Sequential consistency memory model not satisfied between different Goroutines
 
-因为在不同的Goroutine，main函数中无法保证能打印出`hello, world`:
+Because in different Goroutines, the main function is not guaranteed to print `hello, world`:
 
 ```go
 var msg string
@@ -218,7 +218,7 @@ func main() {
 }
 ```
 
-解决的办法是用显式同步：
+The solution is to use explicit synchronization.
 
 ```go
 var msg string
@@ -235,9 +235,10 @@ func main() {
 	println(msg)
 }
 ```
-msg的写入是在channel发送之前，所以能保证打印`hello, world`
 
-## 闭包错误引用同一个变量
+The msg is written before the channel is sent, so it is guaranteed to print `hello, world`.
+
+## Closures incorrectly refer to the same variable
 
 ```go
 func main() {
@@ -249,7 +250,7 @@ func main() {
 }
 ```
 
-改进的方法是在每轮迭代中生成一个局部变量：
+An improved approach is to generate a local variable in each iteration.
 
 ```go
 func main() {
@@ -262,7 +263,7 @@ func main() {
 }
 ```
 
-或者是通过函数参数传入：
+Or, passed in via function parameters.
 
 ```go
 func main() {
@@ -274,9 +275,9 @@ func main() {
 }
 ```
 
-## 在循环内部执行defer语句
+## Execute the defer statement inside the loop
 
-defer在函数退出时才能执行，在for执行defer会导致资源延迟释放：
+defer is executed only when the function exits, and executing defer at for causes a delay in releasing resources.
 
 ```go
 func main() {
@@ -290,7 +291,7 @@ func main() {
 }
 ```
 
-解决的方法可以在for中构造一个局部函数，在局部函数内部执行defer：
+The solution could be to construct a local function in for and execute defer inside the local function.
 
 ```go
 func main() {
@@ -306,9 +307,9 @@ func main() {
 }
 ```
 
-## 切片会导致整个底层数组被锁定
+## Slicing will cause the entire underlying array to be locked
 
-切片会导致整个底层数组被锁定，底层数组无法释放内存。如果底层数组较大会对内存产生很大的压力。
+Slicing causes the entire underlying array to be locked and the underlying array cannot be freed from memory. If the underlying array is large it can put a lot of pressure on memory.
 
 ```go
 func main() {
@@ -327,7 +328,7 @@ func main() {
 }
 ```
 
-解决的方法是将结果克隆一份，这样可以释放底层的数组：
+The solution is to clone a copy of the array, which frees up the underlying array:
 
 ```go
 func main() {
@@ -346,9 +347,9 @@ func main() {
 }
 ```
 
-## 空指针和空接口不等价
+## Null pointers and null interfaces are not equal
 
-比如返回了一个错误指针，但是并不是空的error接口：
+For example, an error pointer is returned, but not the empty error interface.
 
 ```go
 func returnsError() error {
@@ -360,9 +361,9 @@ func returnsError() error {
 }
 ```
 
-## 内存地址会变化
+## Memory address will change
 
-Go语言中对象的地址可能发生变化，因此指针不能从其它非指针类型的值生成：
+Addresses of objects in Go may change, so pointers cannot be generated from values of other non-pointer types.
 
 ```go
 func main() {
@@ -375,13 +376,13 @@ func main() {
 }
 ```
 
-当内存发生变化的时候，相关的指针会同步更新，但是非指针类型的uintptr不会做同步更新。
+When a memory change occurs, the associated pointer is updated synchronously, but the non-pointer type uintptr does not do synchronous updates.
 
-同理CGO中也不能保存Go对象地址。
+Similarly, CGO cannot store Go object addresses.
 
-## Goroutine泄露
+## Goroutine leaks
 
-Go语言是带内存自动回收的特性，因此内存一般不会泄漏。但是Goroutine确存在泄漏的情况，同时泄漏的Goroutine引用的内存同样无法被回收。
+The Go language has automatic memory reclamation, so memory is not generally leaked. However, Goroutine does leak, and the memory referenced by the leaked Goroutine is also not reclaimed.
 
 ```go
 func main() {
@@ -404,10 +405,9 @@ func main() {
 }
 ```
 
-上面的程序中后台Goroutine向管道输入自然数序列，main函数中输出序列。但是当break跳出for循环的时候，后台Goroutine就处于无法被回收的状态了。
+In the above program, the background Goroutine inputs a sequence of natural numbers into the pipeline, and the main function outputs the sequence. But when break jumps out of the for loop, the background Goroutine is in a state that cannot be recycled.
 
-我们可以通过context包来避免这个问题：
-
+We can avoid this problem by using the context package.
 
 ```go
 func main() {
@@ -437,4 +437,4 @@ func main() {
 }
 ```
 
-当main函数在break跳出循环时，通过调用`cancel()`来通知后台Goroutine退出，这样就避免了Goroutine的泄漏。
+When the main function jumps out of the loop at break, it notifies the background Goroutine to exit by calling `cancel()`, thus avoiding Goroutine leakage.
