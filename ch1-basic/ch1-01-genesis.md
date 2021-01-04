@@ -1,46 +1,46 @@
-# 1.1 Go语言创世纪
+# 1.1 Go Language Genesis
 
-Go语言最初由Google公司的Robert Griesemer、Ken Thompson和Rob Pike三个大牛于2007年开始设计发明，设计新语言的最初的洪荒之力来自于对超级复杂的C++11特性的吹捧报告的鄙视，最终的目标是设计网络和多核时代的C语言。到2008年中期，语言的大部分特性设计已经完成，并开始着手实现编译器和运行时，大约在这一年Russ Cox作为主力开发者加入。到了2009年，Go语言已经逐步趋于稳定。同年9月，Go语言正式发布并开源了代码。
+The Go language was originally designed and invented in 2007 by three big guns at Google, Robert Griesemer, Ken Thompson, and Rob Pike. The initial flood of ideas for designing the new language came from a blown-out report of disdain for the super-complex C++11 features, with the ultimate goal of designing C for the web and multi-core era. By mid-2008, most of the language's features were designed and work began on implementing a compiler and runtime, with Russ Cox joining as the lead developer around this year. By 2009, the Go language had gradually stabilized. In September of that year, Go was officially released and the code was open sourced.
 
-Go语言很多时候被描述为“类C语言”，或者是“21世纪的C语言”。从各种角度看，Go语言确实是从C语言继承了相似的表达式语法、控制流结构、基础数据类型、调用参数传值、指针等诸多编程思想，还有彻底继承和发扬了C语言简单直接的暴力编程哲学等。图1-1是《Go语言圣经》中给出的Go语言的基因图谱，我们可以从中看到有哪些编程语言对Go语言产生了影响。
+Go is often described as a "C-like language" or a "C language for the 21st century". From various perspectives, Go does inherit similar programming ideas from C, such as expression syntax, control flow structures, basic data types, call-parameter passing, pointers, and so on, as well as thoroughly inheriting and carrying forward C's simple and straightforward violent programming philosophy. Figure 1-1 shows the genetic mapping of the Go language given in the Go Language Bible, from which we can see what programming languages have influenced the Go language.
 
 ![](../images/ch1-1-go-family-tree.png)
 
-*图 1-1 Go语言基因族谱*
+* Figure 1-1 Go language genetic family tree*.
 
-首先看基因图谱的左边一支。可以明确看出Go语言的并发特性是由贝尔实验室的Hoare于1978年发布的CSP理论演化而来。其后，CSP并发模型在Squeak/NewSqueak和Alef等编程语言中逐步完善并走向实际应用，最终这些设计经验被消化并吸收到了Go语言中。业界比较熟悉的Erlang编程语言的并发编程模型也是CSP理论的另一种实现。
+First look at the left side of the genealogy tree. You can clearly see that the concurrency feature of Go language evolved from the CSP theory published by Hoare of Bell Labs in 1978. Subsequently, the CSP concurrency model was gradually refined and moved towards practical applications in programming languages such as Squeak/NewSqueak and Alef, and eventually these design lessons were digested and absorbed into the Go language. The concurrent programming model of the Erlang programming language, which is more familiar to the industry, is also another implementation of the CSP theory.
 
-再看基因图谱的中间一支。中间一支主要包含了Go语言中面向对象和包特性的演化历程。Go语言中包和接口以及面向对象等特性则继承自Niklaus Wirth所设计的Pascal语言以及其后所衍生的相关编程语言。其中包的概念、包的导入和声明等语法主要来自于Modula-2编程语言，面向对象特性所提供的方法的声明语法等则来自于Oberon编程语言。最终Go语言演化出了自己特有的支持鸭子面向对象模型的隐式接口等诸多特性。
+Let's look at the middle branch of the genetic map. The middle branch contains the evolution of object-oriented and package-oriented features of Go, which are inherited from the Pascal language designed by Niklaus Wirth and the related programming languages that followed. The syntax of package concepts, package import and declaration is mainly from Modula-2, and the syntax of method declarations provided by the object-oriented features is from the Oberon programming language. Eventually the Go language evolved its own unique implicit interface that supports the duck object-oriented model and many other features.
 
-最后是基因图谱的右边一支，这是对C语言的致敬。Go语言是对C语言最彻底的一次扬弃，不仅仅是语法和C语言有着很多差异，最重要的是舍弃了C语言中灵活但是危险的指针运算。而且，Go语言还重新设计了C语言中部分不太合理运算符的优先级，并在很多细微的地方都做了必要的打磨和改变。当然，C语言中少即是多、简单直接的暴力编程哲学则被Go语言更彻底地发扬光大了（Go语言居然只有25个关键字，sepc语言规范还不到50页)）。
+Finally, the right-hand side of the genetic map is a tribute to C. Go is the most radical abandonment of C, not only in terms of syntax but also in terms of abandoning the flexible but dangerous pointer operations of C. Moreover, Go has redesigned the priorities of some of the less sensible operators in C, and has made the necessary changes in many subtle ways. Of course, the violent programming philosophy of C, where less is more and simple is straightforward, is more thoroughly carried forward by Go (Go has only 25 keywords, and the sepc language specification is less than 50 pages long).
 
-Go语言其它的一些特性零散地来自于其他一些编程语言；比如iota语法是从APL语言借鉴，词法作用域与嵌套函数等特性来自于Scheme语言（和其他很多编程语言）。Go语言中也有很多自己发明创新的设计。比如Go语言的切片为轻量级动态数组提供了有效的随机存取的性能，这可能会让人联想到链表的底层的共享机制。还有Go语言新发明的defer语句（Ken发明）也是神来之笔。
+Other features of Go are scattered from other programming languages; iota syntax is borrowed from APL, lexical scopes and nested functions from Scheme (and many other programming languages), and Go has many of its own innovative designs. For example, Go's slicing provides efficient random access performance for lightweight dynamic arrays, which may be reminiscent of the underlying sharing mechanism of a linked table. There is also the Go language's newly invented defer statement (invented by Ken) which is a godsend.
 
-## 1.1.1 来自贝尔实验室特有基因
+## 1.1.1 Unique genes from Bell Labs
 
-作为Go语言标志性的并发编程特性则来自于贝尔实验室的Tony Hoare于1978年发表的鲜为外界所知的关于并发研究的基础文献：顺序通信进程（communicating sequential processes ，缩写为CSP）。在最初的CSP论文中，程序只是一组没有中间共享状态的平行运行的处理过程，它们之间使用管道进行通信和控制同步。Tony Hoare的CSP并发模型只是一个用于描述并发性基本概念的描述语言，它并不是一个可以编写可执行程序的通用编程语言。
+The signature concurrent programming feature of Go comes from Tony Hoare's 1978 paper on the foundations of concurrency research: communicating sequential processes (CSP), a little-known work by Tony Hoare at Bell Labs. Tony Hoare's CSP concurrency model is simply a descriptive language for describing the basic concepts of concurrency, not a general programming language for writing executable programs.
 
-CSP并发模型最经典的实际应用是来自爱立信发明的Erlang编程语言。不过在Erlang将CSP理论作为并发编程模型的同时，同样来自贝尔实验室的Rob Pike以及其同事也在不断尝试将CSP并发模型引入当时的新发明的编程语言中。他们第一次尝试引入CSP并发特性的编程语言叫Squeak（老鼠的叫声），是一个用于提供鼠标和键盘事件处理的编程语言，在这个语言中管道是静态创建的。然后是改进版的Newsqueak语言（新版老鼠的叫声），新提供了类似C语言语句和表达式的语法，还有类似Pascal语言的推导语法。Newsqueak是一个带垃圾回收的纯函数式语言，它再次针对键盘、鼠标和窗口事件管理。但是在Newsqueak语言中管道已经是动态创建的，管道属于第一类值、可以保存到变量中。然后是Alef编程语言（Alef也是C语言之父Ritchie比较喜爱的编程语言），Alef语言试图将Newsqueak语言改造为系统编程语言，但是因为缺少垃圾回收机制而导致并发编程很痛苦（这也是继承C语言手工管理内存的代价）。在Aelf语言之后还有一个叫Limbo的编程语言（地狱的意思），这是一个运行在虚拟机中的脚本语言。Limbo语言是Go语言最接近的祖先，它和Go语言有着最接近的语法。到设计Go语言时，Rob Pike在CSP并发编程模型的实践道路上已经积累了几十年的经验，关于Go语言并发编程的特性完全是信手拈来，新编程语言的到来也是水到渠成了。
+The most classic practical application of the CSP concurrency model comes from the Erlang programming language, invented by Ericsson. But while Erlang was using CSP theory as a concurrent programming model, Rob Pike, also from Bell Labs, and his colleagues were constantly trying to introduce the CSP concurrency model into the then newly invented programming languages. Their first attempt to introduce CSP concurrency features was a programming language called Squeak (the mouse's cry), a programming language used to provide mouse and keyboard event handling in which pipes were created statically. Newsqueak is a purely functional language with garbage collection, and it again targets keyboard, mouse and window event management. But in the Newsqueak language pipes are already created dynamically and they belong to the first class of values and can be saved in variables. Then came the Alef programming language (Alef was also the programming language favored by Ritchie, the father of C), which tried to transform Newsqueak into a system programming language, but the lack of a garbage collection mechanism made concurrent programming painful (this was also the price of inheriting C for manual memory management). After the Aelf language came a programming language called Limbo (for hell), a scripting language that runs in a virtual machine. the Limbo language is the closest ancestor to Go, and it shares the closest syntax to Go. By the time the Go language was designed, Rob Pike had accumulated decades of experience in the CSP concurrent programming model, and the features of concurrent programming in the Go language were completely at his fingertips, and the arrival of the new programming language was a natural fit.
 
-图1-2展示了Go语言库早期代码库日志可以看出最直接的演化历程（Git用`git log --before={2008-03-03} --reverse`命令查看）。
+Figure 1-2 shows the most direct evolutionary history that can be seen in the Go language library's early codebase logs (Git is viewed with the `git log --before={2008-03-03} --reverse` command).
 
 ![](../images/ch1-2-go-log4.png)
 
-*图 1-2 Go语言开发日志*
+* Figure 1-2 Go language development log*.
 
-从早期提交日志中也可以看出，Go语言是从Ken Thompson发明的B语言、Dennis M. Ritchie发明的C语言逐步演化过来的，它首先是C语言家族的成员，因此很多人将Go语言称为21世纪的C语言。
+It is also clear from the early commit logs that the Go language evolved gradually from the B language invented by Ken Thompson and the C language invented by Dennis M. Ritchie. It is first and foremost a member of the C family of languages, so many people refer to the Go language as the C language of the 21st century.
 
-图1-3是Go语言中来自贝尔实验室特有并发编程基因的演化过程：
+Figure 1-3 shows the evolution of the concurrent programming genes unique to the Go language from Bell Labs.
 
 ![](../images/ch1-3-go-history.png)
 
-*图 1-3 Go语言并发演化历史*
+*Figure 1-3 History of concurrency evolution in Go*.
 
-纵观整个贝尔实验室的编程语言的发展进程，从B语言、C语言、Newsqueak、Alef、Limbo语言一路走来，Go语言继承了来着贝尔实验室的半个世纪的软件设计基因，终于完成了C语言革新的使命。纵观这几年来的发展趋势，Go语言已经成为云计算、云存储时代最重要的基础编程语言。
+Throughout the development process of Bell Labs programming languages, from B, C, Newsqueak, Alef, Limbo language all the way, Go language inherited half a century of software design genes coming from Bell Labs, and finally completed the mission of C language innovation. Throughout the past few years, Go language has become the most important basic programming language in the era of cloud computing and cloud storage.
 
-## 1.1.2 你好, 世界
+## 1.1.2 Hello, World
 
-按照惯例，介绍所有编程语言的第一个程序都是“Hello, World!”。虽然本教假设读者已经了解了Go语言，但是我们还是不想打破这个惯例（因为这个传统正是从Go语言的前辈C语言传承而来的）。下面的代码展示的Go语言程序输出的是中文“你好, 世界!”。
+By convention, the first program that introduces all programming languages is "Hello, World!". Although this tutorial assumes that the reader already knows Go, we do not want to break this convention (since it is a tradition inherited from its predecessor, C). The following code shows a Go program that outputs "Hello, World!" in Chinese. .
 
 ```Go
 package main
@@ -48,13 +48,13 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("你好, 世界!")
+	fmt.Println("Hello, 世界!")
 }
 ```
 
-将以上代码保存到`hello.go`文件中。因为代码中有非ASCII的中文字符，我们需要将文件的编码显式指定为无BOM的UTF8编码格式（源文件采用UTF8编码是Go语言规范所要求的）。然后进入命令行并切换到`hello.go`文件所在的目录。目前我们可以将Go语言当作脚本语言，在命令行中直接输入`go run hello.go`来运行程序。如果一切正常的话。应该可以在命令行看到输出"你好, 世界!"的结果。
+Save the above code to a `hello.go` file. Since the code has non-ASCII Chinese characters, we need to explicitly specify the encoding of the file as BOM-free UTF8 (the UTF8 encoding of the source file is required by the Go language specification). Then go to the command line and switch to the directory where the `hello.go` file is located. For now we can use Go as a scripting language and run the program by typing `go run hello.go` directly from the command line. If everything works. You should see the output "Hello, world!" on the command line. on the command line.
 
-现在，让我们简单介绍一下程序。所有的Go程序，都是由最基本的函数和变量构成，函数和变量被组织到一个个单独的Go源文件中，这些源文件再按照作者的意图组织成合适的package，最终这些package再有机地组成一个完整的Go语言程序。其中，函数用于包含一系列的语句(指明要执行的操作序列)，以及执行操作时存放数据的变量。我们这个程序中函数的名字是main。虽然Go语言中，函数的名字没有太多的限制，但是main包中的main函数默认是每一个可执行程序的入口。而package则用于包装和组织相关的函数、变量和常量。在使用一个package之前，我们需要使用import语句导入包。例如，我们这个程序中导入了fmt包（fmt是format单词的缩写，表示格式化相关的包），然后我们才可以使用fmt包中的Println函数。
+Now, let's briefly introduce the program. All Go programs are made up of basic functions and variables, which are organized into individual Go source files, which are then organized into packages according to the author's intent, and which are then organically composed into a complete Go program. Among other things, functions are used to contain a series of statements (specifying the sequence of operations to be performed) and variables that store data when the operations are performed. The name of the function in our program is main, and although there are no restrictions on the names of functions in Go, the main function in the main package is the entry point for every executable by default. The package, on the other hand, is used to wrap and organize related functions, variables, and constants. Before we can use a package, we need to import it using the import statement. For example, we import the fmt package in this program (fmt is an abbreviation of the word format, which means formatting-related package), and then we can use the Println function in the fmt package.
 
-而双引号包含的“你好, 世界!”则是Go语言的字符串面值常量。和C语言中的字符串不同，Go语言中的字符串内容是不可变更的。在以字符串作为参数传递给fmt.Println函数时，字符串的内容并没有被复制——传递的仅仅是字符串的地址和长度（字符串的结构在`reflect.StringHeader`中定义）。在Go语言中，函数参数都是以复制的方式(不支持以引用的方式)传递（比较特殊的是，Go语言闭包函数对外部变量是以引用的方式使用）。
+And the double quotes containing "Hello, world!" is a string value constant in Go. Unlike strings in C, the contents of strings in Go are immutable. When a string is passed as an argument to the fmt.Println function, the content of the string is not copied-all that is passed is the address and length of the string (the structure of the string is defined in `reflect.StringHeader`). In Go, function arguments are passed by copy (no support for passing by reference) (more specifically, Go language closure functions are used by reference for external variables).
 
